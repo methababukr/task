@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<!-- <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script> -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<body>
+
+<div ng-app="myApp" ng-controller="Jsondatadisplay">
+    <div class="container">
+  
+      <br>
+        <h3>Data Details:</h3>
+        <table class="table table-striped" id="myTable2">
+            <thead>
+            <tr>
+                <th data-ng-repeat="tr in tableHeader track by $index">{{tr}}</th>
+            </tr>
+            </thead>
+            <tr data-ng-repeat="data in tableData track by $index">
+                <td data-ng-repeat="col in data track by $index">{{ col }}</td>
+
+            </tr>
+        </table>
+
+        <div>
+
+        </div>
+     <!--    <script>
+            $(document).ready(function () {
+                $('#myTable2').DataTable();
+            });
+        </script> -->
+        <script>
+            var app = angular.module('myApp', []);
+            app.controller('Jsondatadisplay', function ($scope, $http) {
+            
+                $http
+                    .get("data.json")
+                    .then(function (res) {
+                        var dataToParse = res.data.Data;
+                        var replaced = dataToParse.split("\r\n");
+                        $scope.tableHeader = replaced[1].split(",");
+                        var tempArray = [];
+                        angular.forEach(replaced, function (element) {
+                            tempArray.push(element.split(","));
+                        });
+
+                        delete tempArray[0];
+                        delete tempArray[1];
+                        $scope.tableData = tempArray;
+                    })
+            });
+        </script>
+
+</body>
+</html>
